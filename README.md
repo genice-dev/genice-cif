@@ -4,6 +4,9 @@ A [GenIce](https://github.com/vitroid/GenIce) plugin to import CIF file.
 
 ## Requirements
 
+    % make prepare
+will install required packages via pip.
+
 * [GenIce](https://github.com/vitroid/GenIce) >=0.16.
 * [cif2ice](https://github.com/vitroid/cif2ice) >=0.2.
 

@@ -11,6 +11,8 @@ test: RHO.zeo.gro RHO.cif.gro
 	genice zeolite[$*] > $@
 %.cif.gro: %.cif lattices/zeolite.py Makefile
 	genice cif[$<] > $@
+prepare: # might require root privilege.
+	pip install genice cif2ice
 install:
 	install -d $(DEST)
 	install -d $(DEST)/lattices
