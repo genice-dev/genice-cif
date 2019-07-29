@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""
+
+* To convert a local cif file to Gromacs format,
+
+	% genice cif[RHO.cif] > RHO.gro
+
+* Some zeolites share the network topology with low-density ices. If you want to retrieve a zeolite ITT structure from [IZA structure database](http://www.iza-structure.org/databases) to prepare a low-density ice, try the following command:
+
+	% genice zeolite[ITT] > ITT.gro
+"""
 
 #system modules
 import os
@@ -10,16 +20,16 @@ import numpy as np
 from requests import get #requests package
 import validators        #validators package
 from cif2ice import read_cif
+from genice.cell import cellvectors
 
-def shortest_distance(atoms):
-    dmin = 1e99
-    for a1,a2 in it.combinations(atoms,2):
-        name1,x1,y1,z1 = a1
-        name2,x2,y2,z2 = a2
-        d = (x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2
-        if d < dmin:
-            dmin = d
-    return dmin**0.5
+def shortest_distance(atoms,cell):
+    Lmin = 1e99
+    for a1,a2 in it.combinations(atoms@cell,2):
+        d = a1-a2
+        L = d@d
+        if L < Lmin:
+            Lmin = L
+    return Lmin**0.5
 
 
 def is_unique(L, pos):
@@ -31,39 +41,40 @@ def is_unique(L, pos):
     return True
 
 
-def genice_lattice(atoms, box, matchfunc=None):
+def genice_lattice(atoms, cellshape, matchfunc=None):
     global cell, celltype, waters, coord, density
     logger = logging.getLogger()
     filtered = []
     if matchfunc is not None:
         for a in atoms:
             if matchfunc(a[0]):
-                filtered.append(a)
+                filtered.append(a[1:])
+        atoms = np.array(filtered)
     else:
-        filtered = atoms
-    dmin = shortest_distance(filtered)
+        atoms = np.array([a[1:] for a in atoms])
+    logger.debug("Atoms: {0}".format(atoms))
+    cell = cellvectors(*cellshape)
+    dmin = shortest_distance(atoms, cell)
     scale = 2.76 / dmin
-
-    celltype = "triclinic"
-    if (len(box) == 6):
-        cell = np.array([[box[0],0,0],[box[1],box[2],0],[box[3],box[4],box[5]]])
-    else:
-        cell = np.diag(box)
+    logger.debug("Shape: {0}".format(cellshape))
+    logger.debug("Scale: {0}".format(scale))
     volume = np.linalg.det(cell)
     icell  = np.linalg.inv(cell)
-    uniques = []
-    for name,x,y,z in filtered:
-        rpos = np.dot([x,y,z], icell)
-        rpos -= np.floor(rpos)
-        #Do twice to reduce the floating point uncertainty.
-        #(Hint: assume the case when x=-1e-33.)
-        rpos -= np.floor(rpos)
-        if is_unique(uniques, rpos):
-            uniques.append(rpos)
-    waters = uniques
+#    uniques = []
+#    for name,x,y,z in atoms:
+#        rpos = np.dot([x,y,z], icell)
+#        rpos -= np.floor(rpos)
+#        #Do twice to reduce the floating point uncertainty.
+#        #(Hint: assume the case when x=-1e-33.)
+#        rpos -= np.floor(rpos)
+#        if is_unique(uniques, rpos):
+#            uniques.append(rpos)
+#    waters = uniques
+
+    waters = atoms
     coord = "relative"
     # bondlen = 3
-    density = len(filtered)*18.0/(volume*scale**3*1e-24*6.022e23)
+    density = len(atoms)*18.0/(volume*scale**3*1e-24*6.022e23)
 
     
 def download(url, file_name):
@@ -77,9 +88,8 @@ def download(url, file_name):
 def argparser(arg):
     logger = logging.getLogger()
     args = arg.split(":")
-    Nbox = (1,1,1) # should be given as an option
     name = args[0]
-    logger.info(__name__)
+    logger.info(name)
     #input must be a file......too bad.
     if os.path.exists(name):
         fNameIn = name
@@ -96,8 +106,8 @@ def argparser(arg):
         assert validators.url(URL)
         download(URL, fNameIn)
     logger.info("Input: {0}".format(fNameIn))
-    atoms, box = read_cif.read_and_process(fNameIn, Nbox, make_rect_box=False)
-    genice_lattice(atoms, box, matchfunc=lambda x: x[0] != "O")
+    atoms, cellshape = read_cif.read_and_process(fNameIn, make_rect_box=False)
+    genice_lattice(atoms, cellshape, matchfunc=lambda x: x[0] != "O")
 
 
         

@@ -2,32 +2,38 @@
 
 A [GenIce](https://github.com/vitroid/GenIce) plugin to import CIF file.
 
+(version 0.2)
+
 ## Requirements
 
     % make prepare
+
 will install required packages via pip.
 
-* [GenIce](https://github.com/vitroid/GenIce) >=0.16.
-* [cif2ice](https://github.com/vitroid/cif2ice) >=0.2.
+* cif2ice
+* GenIce>=0.25
 
 ## Installation
 
 ### System-wide installation
 
-Not supported.
+Install via pip.
+
+    % pip install genice_cif
 
 ### Private installation
 
-    % make install
-or copy the files in lattices into your local lattices folder of GenIce.
+Not supported.
 
 ## Usage
 
-	% genice zeolite[ITT] > ITT.gro
-to obtain zeolite structure from [Zeolite DB](http://www.iza-structure.org/IZA-SC).
+* To convert a local cif file to Gromacs format,
 
 	% genice cif[RHO.cif] > RHO.gro
-to convert local cif file to Gromacs format.
+
+* Some zeolites share the network topology with low-density ices. If you want to retrieve a zeolite ITT structure from [IZA structure database](http://www.iza-structure.org/databases) to prepare a low-density ice, try the following command:
+
+	% genice zeolite[ITT] > ITT.gro
 
 ## Test in place
 

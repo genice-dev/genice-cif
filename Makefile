@@ -1,22 +1,44 @@
 .DELETE_ON_ERROR:
-OS=$(shell uname)
-ifeq ($(OS), Darwin)
-	DEST=~/Library/Application\ Support/GenIce
-else
-	DEST=~/.genice
-endif
 
-test: RHO.zeo.gro RHO.cif.gro
-%.zeo.gro: lattices/zeolite.py Makefile
+test: RHO.zeo.gro RHO.cif.yap
+%.zeo.gro: genice_cif/lattices/zeolite.py Makefile
 	genice zeolite[$*] > $@
-%.cif.gro: %.cif lattices/zeolite.py Makefile
-	genice cif[$<] > $@
+%.cif.yap: %.cif genice_cif/lattices/zeolite.py Makefile
+	genice cif[$<] -f yaplot > $@
+
+%: temp_% replacer.py genice_cif/lattices/zeolite.py genice_cif/__init__.py
+	python replacer.py < $< > $@
+	-fgrep '%%' $@
+
+
+
+
+
 prepare: # might require root privilege.
 	pip install genice cif2ice
+
+
+test-deploy: build
+	twine upload -r pypitest dist/*
+test-install:
+	pip install pillow
+	pip install --index-url https://test.pypi.org/simple/ genice_cif
+
+
+
 install:
-	install -d $(DEST)
-	install -d $(DEST)/lattices
-	install lattices/*py $(DEST)/lattices
+	./setup.py install
+uninstall:
+	-pip uninstall -y genice-cif
+build: README.md $(wildcard genice_cif/lattices/*.py)
+	./setup.py sdist bdist_wheel
+
+
+deploy: build
+	twine upload dist/*
+check:
+	./setup.py check
 clean:
 	-rm *~ *gro *cif
-	-rm -rf */__pycache__
+	-rm -rf build dist *.egg-info
+	-find . -name __pycache__ | xargs rm -rf
