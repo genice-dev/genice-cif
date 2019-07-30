@@ -1,10 +1,14 @@
 .DELETE_ON_ERROR:
 
-test: RHO.zeo.gro RHO.cif.yap
+test: RHO.zeo.gro.test RHO.cif.yap
 %.zeo.gro: genice_cif/lattices/zeolite.py Makefile
 	genice zeolite[$*] > $@
 %.cif.yap: %.cif genice_cif/lattices/zeolite.py Makefile
 	genice cif[$<] -f yaplot > $@
+%.test:
+	make $*
+	diff $* ref/$*
+
 
 %: temp_% replacer.py genice_cif/lattices/zeolite.py genice_cif/__init__.py
 	python replacer.py < $< > $@
@@ -22,7 +26,7 @@ test-deploy: build
 	twine upload -r pypitest dist/*
 test-install:
 	pip install pillow
-	pip install --index-url https://test.pypi.org/simple/ genice_cif
+	pip install --index-url https://test.pypi.org/simple/ genice-cif
 
 
 
