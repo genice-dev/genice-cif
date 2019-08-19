@@ -45,7 +45,7 @@ setup(
             'zeolite= genice_cif.lattices.zeolite',
         ],
     },
-    install_requires=['cif2ice', 'GenIce>=0.25'],
+    install_requires=['cif2ice>=0.2.2', 'GenIce>=0.25'],
 
     license='MIT',
 )
