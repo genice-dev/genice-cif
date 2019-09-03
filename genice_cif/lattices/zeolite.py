@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+A loader plugin for GenIce to read CIF file or to obtain structures in Zeolite DB.
 
 * To convert a local cif file to Gromacs format,
 
@@ -9,6 +10,15 @@
 
 	% genice zeolite[ITT] > ITT.gro
 """
+
+desc = { "ref": {},
+         "brief": "Read a CIF file.",
+         "usage": __doc__
+        }
+
+if __name__[-16:] == "lattices.zeolite":
+    desc["brief"] = "Obtain from IZA Zeolite DB."
+
 
 #system modules
 import os
