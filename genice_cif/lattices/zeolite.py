@@ -11,7 +11,7 @@ A loader plugin for GenIce to read CIF file or to obtain structures in Zeolite D
 	% genice zeolite[ITT] > ITT.gro
 """
 
-desc = { "ref": {},
+desc = { "ref": {"IZA structure database": "http://www.iza-structure.org/databases"},
          "brief": "Read a CIF file.",
          "usage": __doc__
         }

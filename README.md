@@ -2,7 +2,7 @@
 
 A [GenIce](https://github.com/vitroid/GenIce) plugin to import CIF file.
 
-(version 0.2)
+(version 0.2.1)
 
 ## Requirements
 
@@ -10,7 +10,7 @@ A [GenIce](https://github.com/vitroid/GenIce) plugin to import CIF file.
 
 will install required packages via pip.
 
-* cif2ice
+* cif2ice>=0.2.2
 * GenIce>=0.25
 
 ## Installation
@@ -26,6 +26,7 @@ Install via pip.
 Not supported.
 
 ## Usage
+
 
 * To convert a local cif file to Gromacs format,
 
