@@ -12,7 +12,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(os.path.dirname(__file__), 'genice_cif', '__init__.py'),
                  encoding='utf8') as version_file:
     metadata = dict(re.findall(r"""__([a-z]+)__ = "([^"]+)""", version_file.read()))
-    
+
 
 
 long_desc = "".join(open("README.md").readlines())
@@ -38,14 +38,14 @@ setup(
     packages=['genice_cif',
               'genice_cif.lattices',
     ],
-    
+
     entry_points = {
         'genice_lattice': [
             'cif    = genice_cif.lattices.cif',
             'zeolite= genice_cif.lattices.zeolite',
         ],
     },
-    install_requires=['cif2ice>=0.2.2', 'GenIce>=0.25'],
+    install_requires=['cif2ice>=0.2.2', 'GenIce2'],
 
     license='MIT',
 )
