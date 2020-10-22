@@ -17,7 +17,7 @@ desc = { "ref": {"IZA structure database": "http://www.iza-structure.org/databas
         }
 
 if __name__[-16:] == "lattices.zeolite":
-    desc["brief"] = "Obtain from IZA Zeolite DB."
+    desc["brief"] = "Retrieve a structure from the IZA Zeolite DB."
 
 
 #system modules
