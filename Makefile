@@ -1,41 +1,44 @@
 .DELETE_ON_ERROR:
+GENICE=genice2
+BASE=genice2_cif
+PACKAGE=genice2-cif
 
 test: RHO.zeo.gro.test RHO.cif.yap
-%.zeo.gro: genice_cif/lattices/zeolite.py Makefile
-	genice zeolite[$*] > $@
-%.cif.yap: %.cif genice_cif/lattices/zeolite.py Makefile
-	genice cif[$<] -f yaplot > $@
+%.zeo.gro: genice2_cif/lattices/zeolite.py Makefile
+	( cd $(BASE) && $(GENICE) zeolite[$*] ) > $@
+%.cif.yap: $(BASE)/%.cif genice2_cif/lattices/zeolite.py Makefile
+	( cd $(BASE) && $(GENICE) cif[$*.cif] -f yaplot ) > $@
 %.test:
 	make $*
 	diff $* ref/$*
 
 
-%: temp_% replacer.py genice_cif/lattices/zeolite.py genice_cif/__init__.py
+%: temp_% replacer.py $(BASE)/lattices/cif.py $(BASE)/lattices/zeolite.py $(BASE)/__init__.py
+	pip install genice2_dev
 	python replacer.py < $< > $@
-	-fgrep '%%' $@
 
 
 
 
 
 prepare: # might require root privilege.
-	pip install genice cif2ice
+	pip install genice cif2ice validators
 
 
 test-deploy: build
 	twine upload -r pypitest dist/*
 test-install:
 	pip install pillow
-	pip install --index-url https://test.pypi.org/simple/ genice-cif
+	pip install --index-url https://test.pypi.org/simple/ $(PACKAGE)
 
 
 
 install:
-	./setup.py install
+	python ./setup.py install
 uninstall:
-	-pip uninstall -y genice-cif
-build: README.md $(wildcard genice_cif/lattices/*.py)
-	./setup.py sdist bdist_wheel
+	-pip uninstall -y $(PACKAGE)
+build: README.md $(wildcard genice2_cif/lattices/*.py)
+	python ./setup.py sdist bdist_wheel
 
 
 deploy: build

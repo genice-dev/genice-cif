@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-A loader plugin for GenIce to read CIF file or to obtain structures in Zeolite DB.
+A loader plugin for GenIce2 to read CIF file or to obtain structures in Zeolite DB.
 
 * To convert a local cif file to Gromacs format,
 
-    % genice cif[RHO.cif] > RHO.gro
+    % genice2 cif[RHO.cif] > RHO.gro
 
 * Some zeolites share the network topology with low-density ices. If you want to retrieve a zeolite ITT structure from [IZA structure database](http://www.iza-structure.org/databases) to prepare a low-density ice, try the following command:
 
-    % genice zeolite[ITT] > ITT.gro
+    % genice2 zeolite[ITT] > ITT.gro
 """
 
-desc = { "ref": {"IZA structure database": "http://www.iza-structure.org/databases"},
+desc = { "ref": {"IZA structure database": "IZA database"},
          "brief": "Read a CIF file.",
          "usage": __doc__
         }
@@ -85,7 +85,7 @@ class Lattice(genice2.lattices.Lattice):
                 # it only works when my module name is zeolite.
                 URL = "http://www.iza-structure.org/IZA-SC/cif/"+name+".cif"
             fNameIn = name + ".cif"
-            assert validators.url(URL)
+            # assert validators.url(URL)
             download(URL, fNameIn)
         logger.info("Input: {0}".format(fNameIn))
         atoms, cellshape = read_cif.read_and_process(fNameIn, make_rect_box=False)

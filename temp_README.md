@@ -1,33 +1,41 @@
-# genice-cif
+# [{{package}}]({{url}})
 
-A %%genice%% plugin to import CIF file.
+{{summary}}
 
-(version %%version%%)
+version {{version}}
 
 ## Requirements
 
-    % make prepare
+{% for i in requires %}
+* {{i}}
+{%- endfor %}
 
-will install required packages via pip.
+## Installation from PyPI
 
-* %%requires%%
+```shell
+% pip install {{package}}
+```
 
-## Installation
+## Manual Installation
 
 ### System-wide installation
 
-Install via pip.
-
-    % pip install %%package%%
+```shell
+% make install
+```
 
 ### Private installation
 
-Not supported.
+Copy the files in {{base}}/formats/ into your local formats/ folder.
 
 ## Usage
 
-%%usage%%
+{%- filter indent %}
+    {{usage}}
+{%- endfilter %}
 
 ## Test in place
 
-    % make test
+```shell
+% make test
+```
