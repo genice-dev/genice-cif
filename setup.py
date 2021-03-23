@@ -19,7 +19,7 @@ long_desc = "".join(open("README.md").readlines())
 
 
 setup(
-    name='genice2_cif',
+    name='genice2-cif',
     version=metadata['version'],
     description='CIF reader plugin for GenIce.',
     long_description=long_desc,

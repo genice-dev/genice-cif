@@ -3,11 +3,11 @@ GENICE=genice2
 BASE=genice2_cif
 PACKAGE=genice2-cif
 
-test: RHO.zeo.gro.test RHO.cif.yap
+test: RHO.zeo.gro.test RHO.cif.yap.test
 %.zeo.gro: genice2_cif/lattices/zeolite.py Makefile
-	( cd $(BASE) && $(GENICE) zeolite[$*] ) > $@
+	( cd $(BASE) && $(GENICE) zeolite[$*] ) | grep -v Command > $@
 %.cif.yap: $(BASE)/%.cif genice2_cif/lattices/zeolite.py Makefile
-	( cd $(BASE) && $(GENICE) cif[$*.cif] -f yaplot ) > $@
+	( cd $(BASE) && $(GENICE) cif[$*.cif] -f yaplot ) | grep -v Command > $@
 %.test:
 	make $*
 	diff $* ref/$*

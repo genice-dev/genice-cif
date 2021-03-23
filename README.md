@@ -1,8 +1,8 @@
-# [genice2_cif](https://github.com/vitroid/genice-cif/)
+# [genice2-cif](https://github.com/vitroid/genice-cif/)
 
 A loader plugin for [GenIce2](https://github.com/vitroid/GenIce) to read CIF file or to obtain structures in Zeolite DB.
 
-version 2.0
+version 2.1
 
 ## Requirements
 
@@ -14,7 +14,7 @@ version 2.0
 ## Installation from PyPI
 
 ```shell
-% pip install genice2_cif
+% pip install genice2-cif
 ```
 
 ## Manual Installation
