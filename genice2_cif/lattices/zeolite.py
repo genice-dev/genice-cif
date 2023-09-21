@@ -5,6 +5,13 @@ A loader plugin for GenIce2 to read CIF file or to obtain structures in Zeolite 
 * To convert a local cif file to Gromacs format,
 
     % genice2 cif[RHO.cif] > RHO.gro
+    % genice2 cif[ice.cif:O=O] > RHO.gro   # Specify the tetrahedral atom type ()
+
+  * Options:
+
+    * filename: A CIF file.
+    * O=M:      Regards the atom type M as the position of a water molecule.
+                (Default is "TS" (Tetrahedral hypothetical element "T" or "S"ilica, and "O" is ignored.))
 
 * Some zeolites share the network topology with low-density ices. If you want to retrieve a zeolite ITT structure from [IZA structure database](http://www.iza-structure.org/databases) to prepare a low-density ice, try the following command:
 
@@ -65,31 +72,34 @@ def download(url, file_name):
 class Lattice(genice2.lattices.Lattice):
     def __init__(self, **kwargs):
         logger = getLogger()
-        name = ""
+        path = ""
+        atomtype = "TS"   # typical atom name in zeolite framework. (T or Si)
         for k, v in kwargs.items():
             if k == 'name':
-                name = v
+                path = v
+            elif k == 'O':
+                atomtype = v
             elif v is True:
-             name = k
-        logger.info(name)
+                path = k
         #input must be a file......too bad.
-        if os.path.exists(name):
-            fNameIn = name
+        if os.path.exists(path):
+            fNameIn = path
         else:
-            if validators.url(name):
-                URL = name
-                name = os.path.basename(name)
-                if name[-4:] in (".cif", ".CIF"):
-                    name = name[:-4]
+            if validators.url(path):
+                URL = path
+                path = os.path.basename(path)
+                if path[-4:] in (".cif", ".CIF"):
+                    path = path[:-4]
             elif __name__[-16:] == "lattices.zeolite":
                 # it only works when my module name is zeolite.
-                URL = "http://www.iza-structure.org/IZA-SC/cif/"+name+".cif"
-            fNameIn = name + ".cif"
+                URL = f"http://www.iza-structure.org/IZA-SC/cif/{path}.cif"
+            fNameIn = path + ".cif"
             # assert validators.url(URL)
             download(URL, fNameIn)
-        logger.info("Input: {0}".format(fNameIn))
+        logger.info(f"Input: {fNameIn}".format())
+        logger.info(f"Tetrahedral atom types: {atomtype}")
         atoms, cellshape = read_cif.read_and_process(fNameIn, make_rect_box=False)
-        self.genice_lattice(atoms, cellshape, matchfunc=lambda x: x[0] != "O")
+        self.genice_lattice(atoms, cellshape, matchfunc=lambda x: x[0] in atomtype)
 
     def genice_lattice(self, atoms, cellshape, matchfunc=None):
         logger = getLogger()
@@ -100,9 +110,9 @@ class Lattice(genice2.lattices.Lattice):
                     filtered.append(a[1:])
             atoms = np.array(filtered)
         else:
-            atoms = np.array([a[1:] for a in atoms])
+            atoms = np.array([a[1:] for a in atoms]) / 10  # in nm
         logger.debug("Atoms: {0}".format(atoms))
-        self.cell = cellvectors(*cellshape)
+        self.cell = cellvectors(*cellshape) / 10  # in nm
         dmin = shortest_distance(atoms, self.cell)
         scale = 2.76 / dmin
         logger.debug("Shape: {0}".format(cellshape))

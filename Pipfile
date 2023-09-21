@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cif2ice = ">=0.3.0"
+genice2 = "*"
+validators = "*"
+numpy = "*"
+genice2-cif = {path = "."}
+
+[dev-packages]
+twine = "*"
+
+[requires]
+python_version = "3.9"

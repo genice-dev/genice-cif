@@ -34,6 +34,13 @@ Copy the files in genice2_cif/formats/ into your local formats/ folder.
     * To convert a local cif file to Gromacs format,
 
         % genice2 cif[RHO.cif] > RHO.gro
+        % genice2 cif[ice.cif:O=O] > RHO.gro   # Specify the tetrahedral atom type ()
+
+      * Options:
+
+        * filename: A CIF file.
+        * O=M:      Regards the atom type M as the position of a water molecule.
+                    (Default is "TS" (Tetrahedral hypothetical element "T" or "S"ilica, and "O" is ignored.))
 
     * Some zeolites share the network topology with low-density ices. If you want to retrieve a zeolite ITT structure from [IZA structure database](http://www.iza-structure.org/databases) to prepare a low-density ice, try the following command:
 
