@@ -9,6 +9,7 @@ genice2 = "*"
 validators = "*"
 numpy = "*"
 genice2-cif = {path = "."}
+twine = "*"
 
 [dev-packages]
 twine = "*"

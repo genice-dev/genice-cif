@@ -2,12 +2,12 @@
 
 A loader plugin for [GenIce2](https://github.com/vitroid/GenIce) to read CIF file or to obtain structures in Zeolite DB.
 
-version 2.1
+version 2.1.1
 
 ## Requirements
 
 
-* cif2ice>=0.2.2
+* cif2ice>=0.3.0
 * GenIce2
 * validators
 
