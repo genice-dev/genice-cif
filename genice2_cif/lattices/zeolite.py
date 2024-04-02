@@ -18,34 +18,36 @@ A loader plugin for GenIce2 to read CIF file or to obtain structures in Zeolite 
     % genice2 zeolite[ITT] > ITT.gro
 """
 
-desc = { "ref": {"IZA structure database": "IZA database"},
-         "brief": "Read a CIF file.",
-         "usage": __doc__
-        }
+desc = {
+    "ref": {"IZA structure database": "IZA database"},
+    "brief": "Read a CIF file.",
+    "usage": __doc__,
+}
 
 if __name__[-16:] == "lattices.zeolite":
     desc["brief"] = "Retrieve a structure from the IZA Zeolite DB."
 
 
-#system modules
+# system modules
 import os
 import sys
 import itertools as it
 from logging import getLogger
 
-#external modules
+# external modules
 import numpy as np
-from requests import get #requests package
-import validators        #validators package
+from requests import get  # requests package
+import validators  # validators package
 from cif2ice import read_cif
 from genice2.cell import cellvectors
 import genice2.lattices
 
-def shortest_distance(atoms,cell):
+
+def shortest_distance(atoms, cell):
     Lmin = 1e99
-    for a1,a2 in it.combinations(atoms@cell,2):
-        d = a1-a2
-        L = d@d
+    for a1, a2 in it.combinations(atoms @ cell, 2):
+        d = a1 - a2
+        L = d @ d
         if L < Lmin:
             Lmin = L
     return Lmin**0.5
@@ -53,9 +55,9 @@ def shortest_distance(atoms,cell):
 
 def is_unique(L, pos):
     for x in L:
-        d = x-pos
+        d = x - pos
         d -= np.floor(d + 0.5)
-        if np.dot(d,d) < 0.0000001:
+        if np.dot(d, d) < 0.0000001:
             return False
     return True
 
@@ -73,15 +75,15 @@ class Lattice(genice2.lattices.Lattice):
     def __init__(self, **kwargs):
         logger = getLogger()
         path = ""
-        atomtype = "TS"   # typical atom name in zeolite framework. (T or Si)
+        atomtype = "TS"  # typical atom name in zeolite framework. (T or Si)
         for k, v in kwargs.items():
-            if k == 'name':
+            if k == "name":
                 path = v
-            elif k == 'O':
+            elif k == "O":
                 atomtype = v
             elif v is True:
                 path = k
-        #input must be a file......too bad.
+        # input must be a file......too bad.
         if os.path.exists(path):
             fNameIn = path
         else:
@@ -118,12 +120,11 @@ class Lattice(genice2.lattices.Lattice):
         logger.debug("Shape: {0}".format(cellshape))
         logger.debug("Scale: {0}".format(scale))
         volume = np.linalg.det(self.cell)
-        icell  = np.linalg.inv(self.cell)
+        icell = np.linalg.inv(self.cell)
         self.waters = atoms
         self.coord = "relative"
         # bondlen = 3
-        self.density = len(atoms)*18.0/(volume*scale**3*1e-24*6.022e23)
-
+        self.density = len(atoms) * 18.0 / (volume * scale**3 * 1e-24 * 6.022e23)
 
 
 # Do nothing by default; it causes an error when arguments are missing.
