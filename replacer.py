@@ -10,7 +10,6 @@ project = toml.load("pyproject.toml")
 
 project |= {
     "usage": genice2_cif.lattices.cif.desc["usage"],
-    "version": genice2_cif.__version__,
 }
 
 t = Environment(loader=FileSystemLoader(searchpath=".")).get_template(sys.argv[1])

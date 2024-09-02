@@ -2,8 +2,8 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.version]
-path = "genice2_cif/__init__.py"
+# [tool.hatch.version]
+# path = "genice2_cif/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["genice2_cif"]
@@ -19,13 +19,13 @@ Homepage = "https://github.com/vitroid/genice-cif"
 repository = "https://github.com/vitroid/GenIce"
 logo = "https://raw.githubusercontent.com/vitroid/GenIce/develop/logo/genice-v0.png"
 
-# poetry self add poetry-version-plugin
-[tool.poetry-version-plugin]
-source = "init"
+# # poetry self add poetry-version-plugin
+# [tool.poetry-version-plugin]
+# source = "init"
 
 [tool.poetry]
 name = "genice2-cif"
-version = "0.0.0" # for GenIce2.2
+version = "2.2.1" # for GenIce2.2
 description = "CIF reader plugin for GenIce2."
 authors = ["vitroid <vitroid@gmail.com>"]
 license = "MIT"

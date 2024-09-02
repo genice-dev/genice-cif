@@ -18,7 +18,7 @@ test: RHO.zeo.gro.test RHO.cif.yap.test
 	python replacer.py $< > $@
 
 
-test-deploy:
+test-deploy: clean
 	poetry publish --build -r testpypi
 test-install:
 	pip install --index-url https://test.pypi.org/simple/ $(PIPNAME)
@@ -26,7 +26,7 @@ uninstall:
 	-pip uninstall -y $(PIPNAME)
 build: README.md $(wildcard genice2_cif/*.py)
 	poetry build
-deploy:
+deploy: clean
 	poetry publish --build
 check:
 	poetry check

@@ -4,11 +4,11 @@
 
 A loader plugin for [GenIce2]({{tool.genice.urls.repository}}) to read CIF file or to obtain structures in [Zeolite DB](https://www.iza-structure.org/databases/).
 
-version {{version}}
+version {{tool.poetry.version}}
 
 ## Requirements
 
-{% for item in tool.poetry.dependencies %}* {{item}}{{tool.poetry.dependencies[item]}}
+{% for item in tool.poetry.dependencies %}\* {{item}}{{tool.poetry.dependencies[item]}}
 {% endfor %}
 
 ## Installation from PyPI
@@ -20,12 +20,15 @@ version {{version}}
 ## Usage
 
 {%- filter indent %}
-    {{usage}}
+{{usage}}
 {%- endfilter %}
-
 
 ## Test in place
 
 ```shell
 % make test
 ```
+
+## Todos
+
+- 原子数が 0 の時にはヒントを表示する。
